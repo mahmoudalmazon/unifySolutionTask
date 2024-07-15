@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
 import helmet from "helmet";
@@ -8,18 +9,16 @@ import morgan from "morgan";
 import globalErrorHandler from "./controllers/error.controller";
 import connection from "./utils/mongoose";
 //routes
-import authRouter from "./routes/auth.router";
-import userRouter from "./routes/user.router";
-import adminRouter from "./routes/admin.router";
-
+// import authRouter from "./routes/auth.router";
+import moverRouter from "./routes/magic-mover.routes";
+// import userRouter from "./routes/user.router";
+// import adminRouter from "./routes/admin.router";
 
 const app = express();
 
 app.use(cookieParser("secret"));
 app.disable("x-powered-by");
-const allowedOrigins = [
-  "http://localhost:3000",
-];
+const allowedOrigins = ["http://localhost:3000"];
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Credentials", "true");
   const origin: string = req.headers.origin || "";
@@ -45,9 +44,10 @@ app.use(morgan("dev"));
 
 //routes
 
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/movers", moverRouter);
+// app.use("/api/v1/auth", authRouter);
+// app.use("/api/v1/users", userRouter);
+// app.use("/api/v1/admin", adminRouter);
 
 app.get("/aaa", (req: Request, res: Response) => {
   res.send("hello world");
@@ -58,5 +58,3 @@ connection();
 const server = app.listen(9999, () => {
   console.log(`this app is listening on port 9999....`);
 });
-
-
