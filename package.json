@@ -6,7 +6,6 @@
   "scripts": {
     "build": "npx tsc",
     "start": "nodemon dist/server.js",
-    "start:dev": "concurrently \"npx tsc --watch\" \"nodemon --inspect -q ./dist/server.js\"",
     "dev": "nodemon   ./src/server.ts",
     "test": "jest --watchAll --no-cache"
   },
