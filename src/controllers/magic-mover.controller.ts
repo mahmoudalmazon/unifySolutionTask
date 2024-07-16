@@ -1,16 +1,20 @@
 import { NextFunction, Response, Request } from "express";
 import { MagicMoverService } from "../services/magic-mover.service";
 import { injectable } from "tsyringe";
+import { IMagicMoverInput } from "../interfaces/magic-mover.interface";
+import { IMagicItemInput } from "../interfaces/magic-item.interface";
 
 @injectable()
 export class MagicMoverController {
   constructor(private readonly magicMoverService: MagicMoverService) {}
 
-  async addMagicMover(req: Request, res: Response, next: NextFunction) {
+  async addMagicMover(req: Request<{},{},IMagicMoverInput,{}>, res: Response, next: NextFunction) {
     try {
+      const { name, weightLimit } = req.body;
+
       const magicMover = await this.magicMoverService.addMagicMover(
-        req.body.name,
-        req.body.weightLimit
+    name,
+  weightLimit
       );
       res.status(201).json(magicMover);
     } catch (error) {
@@ -18,11 +22,12 @@ export class MagicMoverController {
     }
   }
 
-  async addMagicItem(req: Request, res: Response, next: NextFunction) {
+  async addMagicItem(req: Request<{},{},IMagicItemInput,{}>, res: Response, next: NextFunction) {
     try {
+      const { name, weight } = req.body;
       const magicItem = await this.magicMoverService.addMagicItem(
-        req.body.name,
-        req.body.weight
+        name,
+        weight
       );
       res.status(201).json(magicItem);
     } catch (error) {
@@ -43,7 +48,7 @@ export class MagicMoverController {
     }
   }
 
-  async startMission(req: Request, res: Response, next: NextFunction) {
+  async startMission(req: Request<{magicMoverId:string},{},{},{}>, res: Response, next: NextFunction) {
     try {
       const { magicMoverId } = req.params;
       const magicMover = await this.magicMoverService.startMission(
@@ -55,7 +60,7 @@ export class MagicMoverController {
     }
   }
 
-  async endMission(req: Request, res: Response, next: NextFunction) {
+  async endMission(req: Request<{magicMoverId:string},{},{},{}>, res: Response, next: NextFunction) {
     try {
       const { magicMoverId } = req.params;
       const magicMover = await this.magicMoverService.endMission(magicMoverId);
@@ -65,7 +70,7 @@ export class MagicMoverController {
     }
   }
 
-  async listTopMovers(req: Request, res: Response, next: NextFunction) {
+  async listTopMovers(req: Request<{},{},{},{}>, res: Response, next: NextFunction) {
     try {
       const topMovers = await this.magicMoverService.listTopMovers();
       res.json(topMovers);

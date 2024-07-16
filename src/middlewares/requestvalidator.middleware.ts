@@ -2,11 +2,9 @@ import { ObjectId } from "mongoose";
 import Joi, { ObjectSchema, object, string } from "joi";
 import { NextFunction, Request, Response } from "express";
 
-import {
-  IUserSignin,
-  IUserInput,
-  IUserVerification,
-} from "../interfaces/user.interface";
+
+import { IMagicMoverInput } from "../interfaces/magic-mover.interface";
+import { IMagicItemInput } from "../interfaces/magic-item.interface";
 
 
 export const RequestValidator = (schema: ObjectSchema) => {
@@ -50,53 +48,22 @@ export const ParamsValidator = (schema: ObjectSchema) => {
 };
 
 export const Schemas = {
-  auth: {
-    signin: Joi.object<IUserSignin>({
-      email: Joi.string().required(),
-      password: Joi.string().required(),
+  mover:{
+    create: Joi.object<IMagicMoverInput>({
+      name: Joi.string().required(),
+      weightLimit: Joi.number().required(),
     }),
-    googleSignIn: Joi.object({
-      idToken: Joi.string().required(),
+    startmission: Joi.object({
+      magicMoverId: Joi.string().required(),
     }),
-    sendVerification: Joi.object<IUserVerification>({
-      email: Joi.string().required(),
-      // type: Joi.string().valid('verify', 'reset').required()
-    }),
-    confirmAndModifyPassword: Joi.object<IUserSignin>({
-      password: Joi.string().required(),
+    endmission: Joi.object({
+      magicMoverId: Joi.string().required(),
     }),
   },
-
-
-  user: {
-    create: Joi.object<IUserInput>({
-      username: Joi.string().required(),
-      email: Joi.string().required(),
-      password: Joi.string().required(),
-      phoneNumber: Joi.string().optional(),
-      passwordConfirmation: Joi.any().valid(Joi.ref("password")),
-      role: Joi.string().valid("user", "admin", "supervisor").optional(),
-      imageProfile: Joi.string().optional(),
-      image: Joi.string().optional(),
-      image_key: Joi.string().optional(),
-    }),
-    edit: Joi.object<IUserInput>({
-      username: Joi.string().required(),
-      email: Joi.string().required(),
-      password: Joi.string().required(),
-      phoneNumber: Joi.string().optional(),
-      image: Joi.string().optional(),
-      image_key: Joi.string().optional(),
-    }),
-    unactive: Joi.object({
-      id: Joi.string().required(),
-    }),
-    changepassword: Joi.object({
-      oldpassword: Joi.string().required(),
-      newpassword: Joi.string().required(),
-      confirmPassword: Joi.valid(Joi.ref("newpassword")).required(),
-    }),
+  item:{
+    create: Joi.object<IMagicItemInput>({
+      name: Joi.string().required(),
+      weight: Joi.number().required(),
+  })
   },
-
-
 };

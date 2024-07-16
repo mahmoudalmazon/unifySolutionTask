@@ -1,1 +1,0 @@
-declare module 'mongoose-i18n-extra'
